@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<project name="flashcard4cn" default="create-jar" basedir=".">
+
+    <property file="build.properties"/>
+
+    <echo message="appname=${appname}"/>
+
+    <target name="clean">
+      <delete dir="${build.base.dir}"/>
+      <delete dir="${dist.dir}"/>
+    </target>
+
+    <target name="compile">
+      <mkdir dir="${build.classes.dir}"/>
+      <echo message="Compiling source files"/>
+    	
+      <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" failonerror="true">
+        <classpath>
+            <pathelement location="${build.classes.dir}"/>
+            <fileset dir="./lib" includes="*.jar"/>
+        </classpath>
+      </javac>
+    </target>
+
+    <target name="-init-jar" depends="compile">
+	    <mkdir dir="${dist.dir}"/>
+        <jar compress="${jar.compress}" jarfile="${dist.jar}" manifest="manifest-prj.mf">
+            <fileset dir="${build.classes.dir}"/>
+            <fileset dir="${src.dir}" includes="**/*.png, **/*.properties" />
+        </jar>
+    </target>
+
+    <target name="-post-jar" depends="">
+        <copy todir="${dist.dir}/conf" >
+            <fileset dir="conf" excludes="**/*.sh, **/*.bat" />
+        </copy>
+        <copy todir="${dist.dir}" file="./conf/startup.bat" />
+        <copy todir="${dist.dir}" file="./conf/startup.sh" />
+        <copy todir="${dist.dir}" file="./LICENSE.txt" />
+        <copy todir="${dist.dir}/lib" >
+           <fileset dir="./lib" includes="*.jar"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="-init-jar, -post-jar">
+    </target>
+
+    <target name="create-jar" depends="clean, jar "/>
+
+    <target name="run" depends="jar" description="Run Flash Card for Chinese Characters">
+	    <echo message="Executing Flash Card for Chinese Characters"/>
+        <java classname="org.moonwave.flashcard4cn.FlashCardApp" fork="true">
+         <classpath>
+            <pathelement location="${dist.jar}"/>
+            <fileset dir="${dist.dir}/lib" includes="*.jar"/>
+         </classpath>
+       </java>
+    </target>    
+
+    <target name="run-verbose" depends="jar" description="Run Flash Card for Chinese Characters">
+	    <echo message="Executing Flash Card for Chinese Characters"/>
+        <java classname="org.moonwave.flashcard4cn.FlashCardApp" fork="true">
+         <arg line="verbose"/>
+         <classpath>
+            <pathelement location="${dist.jar}"/>
+            <fileset dir="${dist.dir}/lib" includes="*.jar"/>
+         </classpath>
+       </java>
+    </target>    
+    
+</project>

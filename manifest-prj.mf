@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.moonwave.flashcard4cn.FlashCardApp
+Class-Path: lib/swing-layout-1.0.3.jar lib/appframework-1.0.3.jar lib/swing-worker-1.1.jar lib/commons-lang.jar lib/commons-logging-api.jar lib/commons-logging.jar lib/log4j-1.2.8.jar
+X-COMMENT: Main-Class will be added automatically by build
+
